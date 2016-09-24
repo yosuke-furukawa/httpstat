@@ -41,11 +41,11 @@ module.exports = function main(arg, opts, headers, data) {
   const url = Object.assign(parse(arg), opts);
   const protocol = url.protocol === 'https:' ? https : http;
   var begin = Date.now();
-  var onLookup = 0; // diff begin - dns resolve
-  var onConnect = 0; // diff dns resolve - connect
-  var onSecureConnect = 0; // diff connect - secureConnect
-  var onTransfer = 0; // diff connet - transfer
-  var onTotal = 0; // diff begin - end
+  var onLookup = begin; // diff begin - dns resolve
+  var onConnect = begin; // diff dns resolve - connect
+  var onSecureConnect = begin; // diff connect - secureConnect
+  var onTransfer = begin; // diff connet - transfer
+  var onTotal = begin; // diff begin - end
   const req = protocol.request(url, (res) => {
     res.once('data', (chunk) => {
       onTransfer = Date.now();
