@@ -53,13 +53,13 @@ module.exports = function main(arg, opts) {
     });
     res.on('end', () => {
       onTotal = Date.now();
-      process.stdout.write(
+      process.stdout.write(sprintf(
         "\n%s%s%s\n", 
         url.protocol === 'https:' ? 
           colorize("HTTPS", colors.green) : colorize("HTTP", colors.green),
         colorize("/", colors.white), 
         sprintf("%s %s", res.httpVersion, res.statusCode)
-      );
+      ));
 
       Object.keys(res.headers).forEach((key) => {
         console.log(
@@ -69,7 +69,7 @@ module.exports = function main(arg, opts) {
       });
 
       if (url.protocol === 'http:') {
-         return (
+         console.log(
           sprintf(
             HTTP_TEMPLATE, 
             fmta(onLookup - begin),
@@ -83,7 +83,7 @@ module.exports = function main(arg, opts) {
           )
         );
       } else if (url.protocol === 'https:') {
-        return (
+        console.log(
           sprintf(
             HTTPS_TEMPLATE, 
             fmta(onLookup - begin),
