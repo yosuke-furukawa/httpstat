@@ -37,7 +37,7 @@ function fmtb(duration) {
   return colorize(sprintf("%-9s", duration + 'ms'), colors.cyan);
 };
 
-module.exports = function main(arg, opts) {
+module.exports = function main(arg, opts, headers, data) {
   const url = Object.assign(parse(arg), opts);
   const protocol = url.protocol === 'https:' ? https : http;
   var begin = Date.now();
@@ -46,7 +46,6 @@ module.exports = function main(arg, opts) {
   var onSecureConnect = 0; // diff connect - secureConnect
   var onTransfer = 0; // diff connet - transfer
   var onTotal = 0; // diff begin - end
-  url.method = 'GET';
   const req = protocol.request(url, (res) => {
     res.once('data', (chunk) => {
       onTransfer = Date.now();
@@ -112,6 +111,19 @@ module.exports = function main(arg, opts) {
       onConnect = Date.now();
     });
   });
+
+  if (headers) {
+    headers.forEach((header) => {
+      const entries = header.split(':');
+      const name = entries[0].trim();
+      const value = entries[1].trim();
+      req.setHeader(name, value);
+    });
+  }
+
+  if (data) {
+    req.write(data);
+  }
 
   req.end();
 }
