@@ -9,7 +9,9 @@ const opts = (argv) => {
   const version = argv.version || argv.v;
   const target = argv._[0];
 
-  const headers = Array.isArray(header) ? header : [header];
+  const headers = 
+    Array.isArray(header) ? header : 
+    header ? [header] : null;
 
   return {
     options: {
