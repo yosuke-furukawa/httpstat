@@ -1,6 +1,6 @@
 {
   "name": "httpstat",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "httpstat can visualize http performance like curl interface inspired by [go httpstat](http://github.com/davecheney/httpstat)",
   "main": "index.js",
   "bin": "./bin/index.js",
