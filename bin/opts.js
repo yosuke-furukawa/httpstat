@@ -16,7 +16,7 @@ const opts = (argv) => {
   return {
     options: {
       method: method,
-      rejectUnauthorized: insecure,
+      rejectUnauthorized: !insecure,
     },
     help: help,
     version: version,

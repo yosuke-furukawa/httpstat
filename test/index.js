@@ -72,3 +72,17 @@ test('index.js: request with headers with body to http server', () => {
     }, 1000);
   });
 });
+
+test('index.js: request to http server use IP', () => {
+  const server = http.createServer((req, res) => {
+    res.end('hello');
+  });
+  server.listen(0);
+  server.on('listening', () => {
+    const port = server.address().port;
+    httpstat(`http://127.0.0.1:${port}/`);
+    setTimeout(() => {
+      server.close();
+    }, 1000);
+  });
+});
