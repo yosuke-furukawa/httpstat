@@ -1,5 +1,6 @@
 httpstat
 ========================================
+[![Build Status](https://travis-ci.org/yosuke-furukawa/httpstat.svg?branch=master)](https://travis-ci.org/yosuke-furukawa/httpstat)
 
 httpstat is a curl like tool, visualize http/https process and show the duration.
 
@@ -18,4 +19,3 @@ $ npm install httpstat -g
 ```
 $ httpstat http://example.com/
 ```
-
