@@ -27,7 +27,7 @@
     "sprintf": "^0.1.5"
   },
   "devDependencies": {
-    "assert-stream": "^1.1.0",
+    "assert-stream": "^1.1.1",
     "eater": "^3.1.0",
     "must-call": "^1.0.0"
   }

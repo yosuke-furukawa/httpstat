@@ -7,6 +7,7 @@ const opts = (argv) => {
   const insecure = argv.insecure || argv.k;
   const help = argv.help || argv.h;
   const version = argv.version || argv.v;
+  const showBody = argv['show-body'];
   const target = argv._[0];
 
   const headers = 
@@ -20,6 +21,7 @@ const opts = (argv) => {
     },
     help: help,
     version: version,
+    showBody: showBody,
     target: target,
     data: data,
     headers: headers
