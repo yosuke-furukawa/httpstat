@@ -2,9 +2,11 @@ const test = require('eater/runner').test;
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const mustCall = require('must-call');
 const httpstat = require('../');
 const assert = require('assert');
 const AssertStream = require('assert-stream');
+const urlFormat = require('url').format;
 
 test('index.js: request to http server', () => {
   const server = http.createServer((req, res) => {
@@ -13,10 +15,20 @@ test('index.js: request to http server', () => {
   server.listen(0);
   server.on('listening', () => {
     const port = server.address().port;
-    httpstat(`http://localhost:${port}/`);
-    setTimeout(() => {
+    const requestUrl = `http://localhost:${port}/`;
+    httpstat(requestUrl).then(mustCall((results) => {
+      const time = results.time;
+      const res = results.response;
+      const url = results.url;
+      assert.equal(urlFormat(url), requestUrl);
+      assert(time.begin > 0);
+      assert(time.onLookup >= time.begin);
+      assert(time.onConnect >= time.begin);
+      assert(time.onTransfer >= time.begin);
+      assert(time.onTotal >= time.begin);
+      assert.strictEqual(res.body, 'hello');
       server.close();
-    }, 1000);
+    }));
   });
 });
 
@@ -31,10 +43,21 @@ test('index.js: request to https server', () => {
   server.listen(0);
   server.on('listening', () => {
     const port = server.address().port;
-    httpstat(`https://localhost:${port}/`, { rejectUnauthorized: false });
-    setTimeout(() => {
+    const requestUrl = `https://localhost:${port}/`;
+    httpstat(requestUrl, { rejectUnauthorized: false }).then(mustCall((results) => {
+      const time = results.time;
+      const res = results.response;
+      const url = results.url;
+      assert.equal(urlFormat(url), requestUrl);
+      assert(time.begin > 0);
+      assert(time.onLookup >= time.begin);
+      assert(time.onConnect >= time.begin);
+      assert(time.onSecureConnect >= time.begin);
+      assert(time.onTransfer >= time.begin);
+      assert(time.onTotal >= time.begin);
+      assert.strictEqual(res.body, 'hello');
       server.close();
-    }, 1000);
+    }));
   });
 });
 
@@ -47,10 +70,14 @@ test('index.js: request with headers to http server', () => {
   server.listen(0);
   server.on('listening', () => {
     const port = server.address().port;
-    httpstat(`http://localhost:${port}/`, { method: 'POST' }, ["Content-Type: application/json"]);
-    setTimeout(() => {
+    const requestUrl = `http://localhost:${port}/`;
+    httpstat(
+      requestUrl, 
+      { method: 'POST' }, 
+      ["Content-Type: application/json"]
+    ).then((results) => {
       server.close();
-    }, 1000);
+    });
   });
 });
 
@@ -66,10 +93,15 @@ test('index.js: request with headers with body to http server', () => {
   server.listen(0);
   server.on('listening', () => {
     const port = server.address().port;
-    httpstat(`http://localhost:${port}/`, { method: 'PUT' }, ["Content-Type: application/json"], "fooobarr");
-    setTimeout(() => {
+    const requestUrl = `http://localhost:${port}/`;
+    httpstat(
+      requestUrl, 
+      { method: 'PUT' }, 
+      ["Content-Type: application/json"], 
+      "fooobarr"
+    ).then((results) => {
       server.close();
-    }, 1000);
+    });
   });
 });
 
@@ -80,9 +112,19 @@ test('index.js: request to http server use IP', () => {
   server.listen(0);
   server.on('listening', () => {
     const port = server.address().port;
-    httpstat(`http://127.0.0.1:${port}/`);
-    setTimeout(() => {
+    const requestUrl = `http://127.0.0.1:${port}/`;
+    httpstat(requestUrl).then((results) => {
+      const time = results.time;
+      const res = results.response;
+      const url = results.url;
+      assert.equal(urlFormat(url), requestUrl);
+      assert(time.begin > 0);
+      assert(time.onLookup === time.begin);
+      assert(time.onConnect >= time.begin);
+      assert(time.onTransfer >= time.begin);
+      assert(time.onTotal >= time.begin);
+      assert.strictEqual(res.body, 'hello');
       server.close();
-    }, 1000);
+    });
   });
 });
