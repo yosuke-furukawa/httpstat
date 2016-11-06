@@ -23,15 +23,15 @@ const showHelp = () => {
   process.exit(0);
 };
 
-if (opts.help || !opts.target) {
+if (opts.help) {
+  showHelp();
+} else if (opts.version) {
+  console.log(pack.version);
+  process.exit(0);
+} else if (!opts.target) {
   showHelp();
 }
 
-if (opts.version) {
-  console.log(pack.version);
-  process.exit(0);
-}
-
-main(opts.target, opts.options, opts.headers, opts.data).then(
+main(opts.target, opts.options, opts.headers, opts.data, opts.formInputs).then(
   (results) => reporter(results, opts)
 ).catch(console.error);
