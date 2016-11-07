@@ -15,7 +15,7 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
     var onLookup = begin; // diff begin - dns resolve
     var onConnect = begin; // diff dns resolve - connect
     var onSecureConnect = begin; // diff connect - secureConnect
-    var onTransfer = begin; // diff connet - transfer
+    var onTransfer = begin; // diff connect - transfer
     var onTotal = begin; // diff begin - end
     var body = '';
     const req = protocol.request(url, (res) => {
@@ -87,7 +87,7 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
           } catch (err) {
             reject(err);
           }
-          const transposeMimeTypes = require('./transposeMimeTypes');
+          const transposeMimeTypes = require('./lib/transposeMimeTypes');
           const types = transposeMimeTypes();
           const type = path.extname(filePath).substr(1);
           const matched = types[type] || 'text/plain';
