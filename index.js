@@ -64,7 +64,7 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
     }
 
     if(formInputs) {
-      writeFormData(req, formInputs, reject);
+      writeFormData(req, formInputs);
     }
 
     if (data) {
