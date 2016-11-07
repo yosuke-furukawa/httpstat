@@ -1,8 +1,14 @@
 'use strict';
 
+const argToArray = (argv) => {
+  return Array.isArray(argv) ? argv :
+    argv ? [argv] : null;
+};
+
 const opts = (argv) => {
   const method = argv.method || argv.X || 'GET';
   const data = argv.data || argv.d;
+  const form = argv.form || argv.F;
   const header = argv.header || argv.H;
   const insecure = argv.insecure || argv.k;
   const help = argv.help || argv.h;
@@ -10,9 +16,8 @@ const opts = (argv) => {
   const showBody = argv['show-body'];
   const target = argv._[0];
 
-  const headers = 
-    Array.isArray(header) ? header : 
-    header ? [header] : null;
+  const headers = argToArray(header);
+  const formInputs = argToArray(form);
 
   return {
     options: {
@@ -24,9 +29,9 @@ const opts = (argv) => {
     showBody: showBody,
     target: target,
     data: data,
+    formInputs: formInputs,
     headers: headers
   };
-
 };
 
 module.exports = opts;

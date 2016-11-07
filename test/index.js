@@ -1,3 +1,5 @@
+'use strict';
+
 const test = require('eater/runner').test;
 const http = require('http');
 const https = require('https');
@@ -124,6 +126,71 @@ test('index.js: request to http server use IP', () => {
       assert(time.onTransfer >= time.begin);
       assert(time.onTotal >= time.begin);
       assert.strictEqual(res.body, 'hello');
+      server.close();
+    });
+  });
+});
+
+test('index.js: request with multipart content to http server', () => {
+  const server = http.createServer((req, res) => {
+    assert.strictEqual(req.method, 'POST');
+    const multipartHeader = 'multipart/form-data';
+    assert.strictEqual(req.headers['content-type'].substr(0, multipartHeader.length), multipartHeader);
+    let body = '';
+    req.on('data', (data) => {
+      body += data.toString();
+    }).on('end', () => {
+      const contentLength = parseInt(req.headers['content-length'], 10);
+      if (isNaN(contentLength)) fail();
+      assert.strictEqual(contentLength, body.length);
+    });
+    
+    res.end('hello');
+  });
+  server.listen(0);
+  server.on('listening', () => {
+    const port = server.address().port;
+    const requestUrl = `http://localhost:${port}/`;
+    httpstat(
+      requestUrl, 
+      { method: 'POST' }, 
+      null, null, 
+      ["foo=bar"]
+    ).then((results) => {
+      server.close();
+    });
+  });
+});
+
+test('index.js: request with multipart upload to http server', () => {
+  const server = http.createServer((req, res) => {
+    assert.strictEqual(req.method, 'POST');
+    const multipartHeader = 'multipart/form-data';
+    assert.strictEqual(req.headers['content-type'].substr(0, multipartHeader.length), multipartHeader);
+    let body = '';
+    req.on('data', (data) => {
+      body += data.toString();
+    }).on('end', () => {
+      const contentLength = parseInt(req.headers['content-length'], 10);
+      if (isNaN(contentLength)) fail();
+      assert.strictEqual(contentLength, body.length);
+      assert(body.match(/Content-Type: application\/json/));
+      const sampleData = fs.readFileSync('test/data/sample.json');
+      assert.notEqual(body.indexOf(sampleData), -1);
+    });
+    
+    res.end('hello');
+  });
+  server.listen(0);
+  server.on('listening', () => {
+    const port = server.address().port;
+    const requestUrl = `http://localhost:${port}/`;
+    httpstat(
+      requestUrl, 
+      { method: 'POST' }, 
+      null, null, 
+      ["foo=@test/data/sample.json"]
+    ).then((results) => {
       server.close();
     });
   });
