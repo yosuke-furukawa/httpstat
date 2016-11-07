@@ -71,7 +71,7 @@ test('bin/index: showBody', (_, fail) => {
   server.listen(0);
   server.on('listening', () => {
     const port = server.address().port;
-    exec(`node ${process.cwd()}/bin/index.js http://localhost:${port} --show-body`, mustCall((err, result) => {
+    exec(`node ${process.cwd()}/bin/index.js --show-body http://localhost:${port}`, mustCall((err, result) => {
       if (err) fail(err);
       assert(result.match(/DNS Lookup/));
       assert(result.match(/TCP Connection/));

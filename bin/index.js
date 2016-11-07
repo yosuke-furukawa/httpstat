@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
+const optionDefinitions = {
+  boolean: ['show-body'],
+};
+
 const minimist = require('minimist');
-const argv = minimist(process.argv.slice(2));
+const argv = minimist(process.argv.slice(2), optionDefinitions);
 const opts = require('./opts')(argv);
 
 const pack = require('../package.json');
