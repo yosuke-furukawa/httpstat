@@ -162,7 +162,7 @@ test('index.js: request with multipart content to http server', () => {
   });
 });
 
-test('index.js: request with multipart upload to http server', () => {
+test('index.js: request with multipart upload to http server', (_, fail) => {
   const server = http.createServer((req, res) => {
     assert.strictEqual(req.method, 'POST');
     const multipartHeader = 'multipart/form-data';
@@ -194,4 +194,18 @@ test('index.js: request with multipart upload to http server', () => {
       server.close();
     });
   });
+});
+
+test('index.js: request with invalid file upload to http server', (_, fail) => {
+  const requestUrl = `http://localhost/`;
+  httpstat(
+    requestUrl, 
+    { method: 'POST' }, 
+    null, null, 
+    ["foo=@test/data/does-not-exist.json"]
+  ).then(fail, mustCall((err) => {
+    assert(err); 
+    assert.equal(err.code, 'ENOENT');
+    assert.equal(err.path, 'test/data/does-not-exist.json');
+  }));
 });

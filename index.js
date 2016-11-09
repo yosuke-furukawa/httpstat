@@ -3,9 +3,7 @@
 const http = require('http');
 const https = require('https');
 const parse = require('url').parse;
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
+const writeFormData = require('./lib/formDataWriter');
 
 module.exports = function main(arg, opts, headers, data, formInputs) {
   const url = Object.assign(parse(arg), opts);
@@ -65,46 +63,8 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
       });
     }
 
-    if (formInputs) {
-      const crlf = '\r\n';
-      const token = crypto.randomBytes(16).toString('hex');
-      const boundary = `---httpstat${token}`;
-      req.setHeader('Content-Type', 
-        `multipart/form-data; boundary=${boundary}`);
-        
-      let body = '';
-      formInputs.forEach((input) => {
-        let filename;
-        let contentType = '';
-        const item = input.split('=');
-        const name = item[0].trim();
-        let value = item[1];
-        if (value.startsWith('@')) {
-          const filePath = value.substr(1);
-          try {
-            value = fs.readFileSync(filePath);
-            filename = `; filename=${path.basename(filePath)}`;
-          } catch (err) {
-            reject(err);
-          }
-          const transposeMimeTypes = require('./lib/transposeMimeTypes');
-          const types = transposeMimeTypes();
-          const type = path.extname(filePath).substr(1);
-          const matched = types[type] || 'text/plain';
-          contentType = `Content-Type: ${matched}${crlf}`;
-        }
-        const formDataItem = [
-          crlf,
-          `--${boundary}${crlf}`,
-          `Content-Disposition: form-data; name="${name}"${filename}${crlf}`,
-          contentType,
-          `${crlf}${value}`,
-        ];
-        body += formDataItem.join('');
-      });
-      body += `${crlf}--${boundary}--`;
-      req.setHeader('Content-Length', body.length);
-      req.write(body);
+    if(formInputs) {
+      writeFormData(req, formInputs);
     }
 
     if (data) {
