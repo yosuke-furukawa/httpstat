@@ -5,8 +5,13 @@ const https = require('https');
 const parse = require('url').parse;
 const writeFormData = require('./lib/formDataWriter');
 
-module.exports = function main(arg, opts, headers, data, formInputs) {
-  const url = Object.assign(parse(arg), opts);
+module.exports = function main(target, options) {
+  options = options || {};
+  const httpOptions = {
+    method: options.method,
+    rejectUnauthorized: !options.insecure,
+  };
+  const url = Object.assign(parse(target), httpOptions);
   return new Promise((resolve, reject) => {
     const protocol = url.protocol === 'https:' ? https : http;
     var begin = Date.now();
@@ -54,8 +59,8 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
 
     req.on('error', reject);
 
-    if (headers) {
-      headers.forEach((header) => {
+    if (options.headers) {
+      options.headers.forEach((header) => {
         const entries = header.split(':');
         const name = entries[0].trim();
         const value = entries[1].trim();
@@ -63,12 +68,12 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
       });
     }
 
-    if(formInputs) {
-      writeFormData(req, formInputs);
+    if(options.formData) {
+      writeFormData(req, options.formData);
     }
 
-    if (data) {
-      req.write(data);
+    if (options.data) {
+      req.write(options.data);
     }
 
     req.end();

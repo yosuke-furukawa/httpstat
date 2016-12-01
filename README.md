@@ -17,8 +17,8 @@ $ npm install httpstat -g
 # Usage as tool
 
 ```
-$ httpstat http://example.com/
-$ httpstat -X POST -d test http://example.com/
+$ httpstat http://httpbin.org/get
+$ httpstat -X POST -d test http://httpbin.org/post
 ```
 
 # Install as library
@@ -32,7 +32,7 @@ $ npm install httpstat -S
 ```javascript
 const httpstat = require('httpstat');
 
-httpstat('http://example.com', /* option, headers, body */).then((result) => {
+httpstat('http://httpbin.org/post', { method: 'POST' }).then((result) => {
   console.log(result); // time property has duration time.
 }).catch((e) => {
   console.error(e);
@@ -41,10 +41,13 @@ httpstat('http://example.com', /* option, headers, body */).then((result) => {
 
 # API
 
-## httpstat(url, [options], [headers], [body]) - return Promise
+## httpstat(url, [options]) - return Promise
 
-- url, type: string, `url` is a request target url. required.
-- options, type: object, `options` is a http(s) request options see [node http API](https://nodejs.org/docs/latest/api/http.html#http_http_request_options_callback)
-- headers, type: array, headers is http request headers like ["Content-Type: application/json"]
-- body, type: string, body is http request body
+- `url` (type: `string`, required): Request target url
+- `options` (type: `object`, optional)
+  - `method`: (type: `string`, default: `GET`): HTTP request method
+  - `insecure`: (type: `boolean`): Allow connections to SSL sites without certs
+  - `headers`: (type: `array` of `string`): Request headers
+  - `data`: (type: `string`): Request body,
+  - `formData`: (type: `array` of `string`):  HTTP multipart POST data
 

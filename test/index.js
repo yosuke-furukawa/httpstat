@@ -46,7 +46,9 @@ test('index.js: request to https server', () => {
   server.on('listening', () => {
     const port = server.address().port;
     const requestUrl = `https://localhost:${port}/`;
-    httpstat(requestUrl, { rejectUnauthorized: false }).then(mustCall((results) => {
+    httpstat(requestUrl, {
+      insecure: true,
+    }).then(mustCall((results) => {
       const time = results.time;
       const res = results.response;
       const url = results.url;
@@ -73,11 +75,10 @@ test('index.js: request with headers to http server', () => {
   server.on('listening', () => {
     const port = server.address().port;
     const requestUrl = `http://localhost:${port}/`;
-    httpstat(
-      requestUrl, 
-      { method: 'POST' }, 
-      ["Content-Type: application/json"]
-    ).then((results) => {
+    httpstat(requestUrl, {
+      method: 'POST',
+      headers: ['Content-Type: application/json'],
+    }).then((results) => {
       server.close();
     });
   });
@@ -96,12 +97,11 @@ test('index.js: request with headers with body to http server', () => {
   server.on('listening', () => {
     const port = server.address().port;
     const requestUrl = `http://localhost:${port}/`;
-    httpstat(
-      requestUrl, 
-      { method: 'PUT' }, 
-      ["Content-Type: application/json"], 
-      "fooobarr"
-    ).then((results) => {
+    httpstat(requestUrl, {
+      method: 'PUT',
+      headers: ['Content-Type: application/json'],
+      data: 'fooobarr',
+    }).then((results) => {
       server.close();
     });
   });
@@ -151,12 +151,10 @@ test('index.js: request with multipart content to http server', () => {
   server.on('listening', () => {
     const port = server.address().port;
     const requestUrl = `http://localhost:${port}/`;
-    httpstat(
-      requestUrl, 
-      { method: 'POST' }, 
-      null, null, 
-      ["foo=bar"]
-    ).then((results) => {
+    httpstat(requestUrl, {
+      method: 'POST',
+      formData: ["foo=bar"],
+    }).then((results) => {
       server.close();
     });
   });
@@ -185,12 +183,10 @@ test('index.js: request with multipart upload to http server', (_, fail) => {
   server.on('listening', () => {
     const port = server.address().port;
     const requestUrl = `http://localhost:${port}/`;
-    httpstat(
-      requestUrl, 
-      { method: 'POST' }, 
-      null, null, 
-      ["foo=@test/data/sample.json"]
-    ).then((results) => {
+    httpstat(requestUrl, {
+      method: 'POST',
+      formData:  ["foo=@test/data/sample.json"],
+    }).then((results) => {
       server.close();
     });
   });
@@ -198,12 +194,10 @@ test('index.js: request with multipart upload to http server', (_, fail) => {
 
 test('index.js: request with invalid file upload to http server', (_, fail) => {
   const requestUrl = `http://localhost/`;
-  httpstat(
-    requestUrl, 
-    { method: 'POST' }, 
-    null, null, 
-    ["foo=@test/data/does-not-exist.json"]
-  ).then(fail, mustCall((err) => {
+  httpstat(requestUrl, {
+      method: 'POST',
+      formData: ["foo=@test/data/does-not-exist.json"],
+    }).then(fail, mustCall((err) => {
     assert(err); 
     assert.equal(err.code, 'ENOENT');
     assert.equal(err.path, 'test/data/does-not-exist.json');

@@ -17,19 +17,17 @@ const opts = (argv) => {
   const target = argv._[0];
 
   const headers = argToArray(header);
-  const formInputs = argToArray(form);
+  const formData = argToArray(form);
 
   return {
-    options: {
-      method: method,
-      rejectUnauthorized: !insecure,
-    },
+    method,
+    insecure,
     help: help,
     version: version,
     showBody: showBody,
     target: target,
     data: data,
-    formInputs: formInputs,
+    formData: formData,
     headers: headers
   };
 };

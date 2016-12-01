@@ -36,6 +36,11 @@ if (opts.help) {
   showHelp();
 }
 
-main(opts.target, opts.options, opts.headers, opts.data, opts.formInputs).then(
-  (results) => reporter(results, opts)
-).catch(console.error);
+main(opts.target, {
+  method: opts.method,
+  insecure: opts.insecure,
+  headers: opts.headers,
+  data: opts.data,
+  formData: opts.formData,
+}).then(results => reporter(results, opts))
+.catch(console.error);
