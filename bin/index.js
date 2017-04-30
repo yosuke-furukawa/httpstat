@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const optionDefinitions = {
-  boolean: ['show-body'],
+  boolean: ['show-body', 'json-output'],
 };
 
 const minimist = require('minimist');
@@ -22,6 +22,7 @@ const showHelp = () => {
       -d, --data request body
       -F, --form Specify HTTP multipart POST data
       -k, --insecure Allow connections to SSL sites without certs
+      --json-output output response in json format
       --show-body Show response body
   `);
   process.exit(0);

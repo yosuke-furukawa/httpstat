@@ -14,6 +14,7 @@ const opts = (argv) => {
   const help = argv.help || argv.h;
   const version = argv.version || argv.v;
   const showBody = argv['show-body'];
+  const jsonOutput = argv['json-output'];
   const target = argv._[0];
 
   const headers = argToArray(header);
@@ -27,6 +28,7 @@ const opts = (argv) => {
     help: help,
     version: version,
     showBody: showBody,
+    jsonOutput: jsonOutput,
     target: target,
     data: data,
     formInputs: formInputs,
