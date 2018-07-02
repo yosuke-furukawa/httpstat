@@ -39,4 +39,7 @@ if (opts.help) {
 
 main(opts.target, opts.options, opts.headers, opts.data, opts.formInputs).then(
   (results) => reporter(results, opts)
-).catch(console.error);
+).catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
