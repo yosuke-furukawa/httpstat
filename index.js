@@ -17,11 +17,11 @@ module.exports = function main(arg, opts, headers, data, formInputs) {
     var onTotal = begin; // diff begin - end
     var body = '';
     const req = protocol.request(url, (res) => {
-      res.once('readable', () => {
-        onTransfer = Date.now();
-      });
-      res.on('data', (chunk) => {
-        body += chunk;
+      res.on('readable', () => {
+        if (onTransfer === begin) {
+          onTransfer = Date.now();
+        }
+        body += res.read();
       });
       res.on('end', () => {
         onTotal = Date.now();
