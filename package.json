@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "assert-stream": "1.1.1",
-    "eater": "3.3.0",
+    "eater": "4.0.0",
     "must-call": "1.0.0"
   }
 }
