@@ -46,5 +46,4 @@ httpstat('http://example.com', /* option, headers, body */).then((result) => {
 - url, type: string, `url` is a request target url. required.
 - options, type: object, `options` is a http(s) request options see [node http API](https://nodejs.org/docs/latest/api/http.html#http_http_request_options_callback)
 - headers, type: array, headers is http request headers like ["Content-Type: application/json"]
-- body, type: string, body is http request body
-
+- body, type: string, body is http request body.
