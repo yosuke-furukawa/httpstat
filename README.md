@@ -6,7 +6,7 @@ httpstat is a curl like tool, visualize http/https process and show the duration
 
 ![image](https://github.com/yosuke-furukawa/httpstat/raw/master/screenshot.png)
 
-Reference from [python httpstat](https://github.com/reorx/httpstat) and [go httpstat](https://github.com/davecheney/httpstat)
+Reference from [python httpstat](https://github.com/reorx/httpstat) and [go httpstat](https://github.com/davecheney/httpstat) .
 
 # Install as tool
 
